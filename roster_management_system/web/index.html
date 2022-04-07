@@ -36,7 +36,22 @@
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
   <script>
+    var firebaseConfig = {
+          apiKey: "...",
+          authDomain: "roster-management-system.firebaseapp.com",
+          databaseURL: "https://roster-management-system.firebaseio.com",
+          projectId: "roster-management-system",
+          storageBucket: "roster-management-system.appspot.com",
+          messagingSenderId: "515997796368",
+          appId: "1:...:web:...",
+          measurementId: "G-...",
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
     function loadMainDartJs() {
