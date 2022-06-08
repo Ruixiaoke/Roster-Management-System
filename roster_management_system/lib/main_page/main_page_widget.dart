@@ -1,6 +1,6 @@
 import '../admin_page/admin_page_widget.dart';
 import '../auth/auth_util.dart';
-import '../colock_in_out_page/colock_in_out_page_widget.dart';
+import '../clock_in_out_page/clock_in_out_page_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -35,8 +35,6 @@ class _MainPageWidgetState extends State<MainPageWidget> {
             builder: (context) => AdminPageWidget(),
           ),
         );
-      } else {
-        return;
       }
     });
   }
@@ -151,13 +149,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           MyRosterPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'My Roster',
@@ -182,16 +180,16 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ColockInOutPageWidget(),
+                                          ClockInOutPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
-                                text: 'Colock In/Out',
+                                text: 'Clock In/Out',
                                 options: FFButtonOptions(
                                   width: 130,
                                   height: 75,
@@ -213,13 +211,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           MyTrainingPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'My Training',
@@ -244,13 +242,13 @@ class _MainPageWidgetState extends State<MainPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           WorkMarketPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'Work Market',

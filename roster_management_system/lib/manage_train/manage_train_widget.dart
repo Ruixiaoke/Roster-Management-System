@@ -161,13 +161,13 @@ class _ManageTrainWidgetState extends State<ManageTrainWidget> {
                             ),
                             FFButtonWidget(
                               onPressed: () async {
-                                setState(() => FFAppState().MenuShow = false);
-                                await Navigator.push(
+                                await Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         ManageWorkMarketWidget(),
                                   ),
+                                  (r) => false,
                                 );
                               },
                               text: 'Manage Work Market',

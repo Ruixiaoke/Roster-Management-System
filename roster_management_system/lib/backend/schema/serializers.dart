@@ -4,6 +4,7 @@ import 'users_record.dart';
 import 'task_record.dart';
 import 'train_record.dart';
 import 'task_choosed_record.dart';
+import 'avaliable_weekday_record.dart';
 
 import 'index.dart';
 
@@ -18,6 +19,7 @@ const kDocumentReferenceField = 'Document__Reference__Field';
   TaskRecord,
   TrainRecord,
   TaskChoosedRecord,
+  AvaliableWeekdayRecord,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..add(DocumentReferenceSerializer())

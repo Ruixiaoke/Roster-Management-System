@@ -11,15 +11,15 @@ service cloud.firestore {
     match /Task/{document} {
       allow create: if true;
       allow read: if true;
-      allow write: if request.auth != null;
-      allow delete: if request.auth != null;
+      allow write: if true;
+      allow delete: if true;
     }
 
     match /Train/{document} {
       allow create: if true;
       allow read: if true;
-      allow write: if request.auth != null;
-      allow delete: if request.auth != null;
+      allow write: if true;
+      allow delete: if true;
     }
 
     match /Users/{parent}/TaskChoosed/{document} {
@@ -28,5 +28,17 @@ service cloud.firestore {
       allow write: if request.auth.uid == parent;
       allow delete: if false;
     }
+
+    match /Users/{parent}/AvaliableWeekday/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if true;
+      allow delete: if true;
+    }
+
+    match /{path=**}/AvaliableWeekday/{document} {
+      allow read: if true;
+    }
+
   }
 }

@@ -35,7 +35,10 @@ abstract class TaskChoosedRecord
   DateTime get endDate;
 
   @nullable
-  bool get state;
+  String get state;
+
+  @nullable
+  String get uid;
 
   @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
@@ -48,7 +51,8 @@ abstract class TaskChoosedRecord
     ..taskName = ''
     ..taskDes = ''
     ..taskId = ''
-    ..state = false;
+    ..state = ''
+    ..uid = '';
 
   static Query<Map<String, dynamic>> collection([DocumentReference parent]) =>
       parent != null
@@ -82,7 +86,8 @@ Map<String, dynamic> createTaskChoosedRecordData({
   String taskId,
   DateTime startDate,
   DateTime endDate,
-  bool state,
+  String state,
+  String uid,
 }) =>
     serializers.toFirestore(
         TaskChoosedRecord.serializer,
@@ -93,4 +98,5 @@ Map<String, dynamic> createTaskChoosedRecordData({
           ..taskId = taskId
           ..startDate = startDate
           ..endDate = endDate
-          ..state = state));
+          ..state = state
+          ..uid = uid));

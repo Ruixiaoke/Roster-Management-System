@@ -68,8 +68,15 @@ class _$TaskChoosedRecordSerializer
     if (value != null) {
       result
         ..add('state')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.uid;
+    if (value != null) {
+      result
+        ..add('uid')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
     }
     value = object.reference;
     if (value != null) {
@@ -122,7 +129,11 @@ class _$TaskChoosedRecordSerializer
           break;
         case 'state':
           result.state = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'uid':
+          result.uid = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
@@ -151,7 +162,9 @@ class _$TaskChoosedRecord extends TaskChoosedRecord {
   @override
   final DateTime endDate;
   @override
-  final bool state;
+  final String state;
+  @override
+  final String uid;
   @override
   final DocumentReference<Object> reference;
 
@@ -167,6 +180,7 @@ class _$TaskChoosedRecord extends TaskChoosedRecord {
       this.startDate,
       this.endDate,
       this.state,
+      this.uid,
       this.reference})
       : super._();
 
@@ -189,6 +203,7 @@ class _$TaskChoosedRecord extends TaskChoosedRecord {
         startDate == other.startDate &&
         endDate == other.endDate &&
         state == other.state &&
+        uid == other.uid &&
         reference == other.reference;
   }
 
@@ -199,12 +214,14 @@ class _$TaskChoosedRecord extends TaskChoosedRecord {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, tasks.hashCode), taskName.hashCode),
-                            taskDes.hashCode),
-                        taskId.hashCode),
-                    startDate.hashCode),
-                endDate.hashCode),
-            state.hashCode),
+                        $jc(
+                            $jc($jc($jc(0, tasks.hashCode), taskName.hashCode),
+                                taskDes.hashCode),
+                            taskId.hashCode),
+                        startDate.hashCode),
+                    endDate.hashCode),
+                state.hashCode),
+            uid.hashCode),
         reference.hashCode));
   }
 
@@ -218,6 +235,7 @@ class _$TaskChoosedRecord extends TaskChoosedRecord {
           ..add('startDate', startDate)
           ..add('endDate', endDate)
           ..add('state', state)
+          ..add('uid', uid)
           ..add('reference', reference))
         .toString();
   }
@@ -251,9 +269,13 @@ class TaskChoosedRecordBuilder
   DateTime get endDate => _$this._endDate;
   set endDate(DateTime endDate) => _$this._endDate = endDate;
 
-  bool _state;
-  bool get state => _$this._state;
-  set state(bool state) => _$this._state = state;
+  String _state;
+  String get state => _$this._state;
+  set state(String state) => _$this._state = state;
+
+  String _uid;
+  String get uid => _$this._uid;
+  set uid(String uid) => _$this._uid = uid;
 
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
@@ -274,6 +296,7 @@ class TaskChoosedRecordBuilder
       _startDate = $v.startDate;
       _endDate = $v.endDate;
       _state = $v.state;
+      _uid = $v.uid;
       _reference = $v.reference;
       _$v = null;
     }
@@ -304,6 +327,7 @@ class TaskChoosedRecordBuilder
               startDate: startDate,
               endDate: endDate,
               state: state,
+              uid: uid,
               reference: reference);
     } catch (_) {
       String _$failedField;

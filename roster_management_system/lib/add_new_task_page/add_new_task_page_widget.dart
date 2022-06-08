@@ -1,7 +1,11 @@
+import '../auth/auth_util.dart';
+import '../backend/backend.dart';
+import '../backend/firebase_storage/storage.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../manage_work_market/manage_work_market_widget.dart';
+import '../flutter_flow/upload_media.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,15 +18,16 @@ class AddNewTaskPageWidget extends StatefulWidget {
 }
 
 class _AddNewTaskPageWidgetState extends State<AddNewTaskPageWidget> {
-  TextEditingController textController1;
-  TextEditingController textController2;
+  String uploadedFileUrl = '';
+  TextEditingController taskDetailTextController;
+  TextEditingController taskNameTextController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController();
-    textController2 = TextEditingController();
+    taskDetailTextController = TextEditingController();
+    taskNameTextController = TextEditingController();
   }
 
   @override
@@ -49,15 +54,7 @@ class _AddNewTaskPageWidgetState extends State<AddNewTaskPageWidget> {
                       ),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              duration: Duration(milliseconds: 300),
-                              reverseDuration: Duration(milliseconds: 300),
-                              child: ManageWorkMarketWidget(),
-                            ),
-                          );
+                          Navigator.pop(context);
                         },
                         text: '',
                         icon: Icon(
@@ -112,16 +109,25 @@ class _AddNewTaskPageWidgetState extends State<AddNewTaskPageWidget> {
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    Image.network(
+                      uploadedFileUrl,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
                     Text(
-                      'Hello World',
-                      style: FlutterFlowTheme.of(context).bodyText1,
+                      'Enter Task Name',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            fontSize: 50,
+                          ),
                     ),
                     TextFormField(
-                      controller: textController1,
+                      controller: taskNameTextController,
                       onChanged: (_) => EasyDebounce.debounce(
-                        'textController1',
+                        'taskNameTextController',
                         Duration(milliseconds: 2000),
                         () => setState(() {}),
                       ),
@@ -150,16 +156,22 @@ class _AddNewTaskPageWidgetState extends State<AddNewTaskPageWidget> {
                           ),
                         ),
                       ),
-                      style: FlutterFlowTheme.of(context).bodyText1,
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            fontSize: 45,
+                          ),
                     ),
                     Text(
-                      'Hello World',
-                      style: FlutterFlowTheme.of(context).bodyText1,
+                      'Enter Task Detail',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            fontSize: 50,
+                          ),
                     ),
                     TextFormField(
-                      controller: textController2,
+                      controller: taskDetailTextController,
                       onChanged: (_) => EasyDebounce.debounce(
-                        'textController2',
+                        'taskDetailTextController',
                         Duration(milliseconds: 2000),
                         () => setState(() {}),
                       ),
@@ -188,7 +200,96 @@ class _AddNewTaskPageWidgetState extends State<AddNewTaskPageWidget> {
                           ),
                         ),
                       ),
-                      style: FlutterFlowTheme.of(context).bodyText1,
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            fontSize: 45,
+                          ),
+                    ),
+                    FFButtonWidget(
+                      onPressed: () async {
+                        final selectedMedia =
+                            await selectMediaWithSourceBottomSheet(
+                          context: context,
+                          maxWidth: 250.00,
+                          maxHeight: 250.00,
+                          allowPhoto: true,
+                        );
+                        if (selectedMedia != null &&
+                            selectedMedia.every((m) =>
+                                validateFileFormat(m.storagePath, context))) {
+                          showUploadMessage(
+                            context,
+                            'Uploading file...',
+                            showLoading: true,
+                          );
+                          final downloadUrls = (await Future.wait(selectedMedia
+                                  .map((m) async => await uploadData(
+                                      m.storagePath, m.bytes))))
+                              .where((u) => u != null)
+                              .toList();
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          if (downloadUrls != null &&
+                              downloadUrls.length == selectedMedia.length) {
+                            setState(
+                                () => uploadedFileUrl = downloadUrls.first);
+                            showUploadMessage(
+                              context,
+                              'Success!',
+                            );
+                          } else {
+                            showUploadMessage(
+                              context,
+                              'Failed to upload media',
+                            );
+                            return;
+                          }
+                        }
+                      },
+                      text: 'UpLoad image',
+                      options: FFButtonOptions(
+                        width: double.infinity,
+                        height: 50,
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                        textStyle:
+                            FlutterFlowTheme.of(context).subtitle2.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 50,
+                                ),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1,
+                        ),
+                        borderRadius: 12,
+                      ),
+                    ),
+                    FFButtonWidget(
+                      onPressed: () async {
+                        final taskCreateData = createTaskRecordData(
+                          taskName: taskNameTextController.text,
+                          taskDes: taskDetailTextController.text,
+                          taskImage: uploadedFileUrl,
+                          choosed: false,
+                        );
+                        await TaskRecord.collection.doc().set(taskCreateData);
+                      },
+                      text: 'Upload Task',
+                      options: FFButtonOptions(
+                        width: double.infinity,
+                        height: 60,
+                        color: FlutterFlowTheme.of(context).primaryColor,
+                        textStyle:
+                            FlutterFlowTheme.of(context).subtitle2.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 50,
+                                ),
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1,
+                        ),
+                        borderRadius: 12,
+                      ),
                     ),
                   ],
                 ),

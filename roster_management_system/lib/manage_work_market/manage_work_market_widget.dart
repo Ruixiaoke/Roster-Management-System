@@ -7,7 +7,6 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import '../home_page/home_page_widget.dart';
 import '../manage_train/manage_train_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ManageWorkMarketWidget extends StatefulWidget {
@@ -19,20 +18,6 @@ class ManageWorkMarketWidget extends StatefulWidget {
 
 class _ManageWorkMarketWidgetState extends State<ManageWorkMarketWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void initState() {
-    super.initState();
-    // On page load action.
-    SchedulerBinding.instance?.addPostFrameCallback((_) async {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ManageTrainWidget(),
-        ),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +99,7 @@ class _ManageWorkMarketWidgetState extends State<ManageWorkMarketWidget> {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  if (((FFAppState().MenuShow) == true) ||
-                      responsiveVisibility(
-                        context: context,
-                        desktop: false,
-                      ))
+                  if ((FFAppState().MenuShow) == true)
                     Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: MediaQuery.of(context).size.height * 1,
@@ -148,7 +129,6 @@ class _ManageWorkMarketWidgetState extends State<ManageWorkMarketWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -294,6 +274,14 @@ class _ManageWorkMarketWidgetState extends State<ManageWorkMarketWidget> {
                               }
                               List<TaskRecord> gridViewTaskRecordList =
                                   snapshot.data;
+                              if (gridViewTaskRecordList.isEmpty) {
+                                return Image.asset(
+                                  'assets/images/icon1.png',
+                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                      MediaQuery.of(context).size.height * 1,
+                                );
+                              }
                               return GridView.builder(
                                 padding: EdgeInsets.zero,
                                 gridDelegate:
@@ -315,7 +303,12 @@ class _ManageWorkMarketWidgetState extends State<ManageWorkMarketWidget> {
                                       width: 100,
                                       height: 100,
                                       decoration: BoxDecoration(
-                                        color: Color(0xFF808AC7),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.network(
+                                            gridViewTaskRecord.taskImage,
+                                          ).image,
+                                        ),
                                       ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,

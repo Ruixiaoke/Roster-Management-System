@@ -1,8 +1,10 @@
 import '../auth/auth_util.dart';
-import '../colock_in_out_page/colock_in_out_page_widget.dart';
+import '../backend/backend.dart';
+import '../clock_in_out_page/clock_in_out_page_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import '../flutter_flow/flutter_flow_youtube_player.dart';
 import '../home_page/home_page_widget.dart';
 import '../my_roster_page/my_roster_page_widget.dart';
 import '../work_market_page/work_market_page_widget.dart';
@@ -26,12 +28,6 @@ class _MyTrainingPageWidgetState extends State<MyTrainingPageWidget> {
     // On page load action.
     SchedulerBinding.instance?.addPostFrameCallback((_) async {
       setState(() => FFAppState().MenuShow = false);
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyRosterPageWidget(),
-        ),
-      );
     });
   }
 
@@ -115,7 +111,11 @@ class _MyTrainingPageWidgetState extends State<MyTrainingPageWidget> {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  if ((FFAppState().MenuShow) == true)
+                  if (((FFAppState().MenuShow) == true) ||
+                      responsiveVisibility(
+                        context: context,
+                        desktop: false,
+                      ))
                     Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: MediaQuery.of(context).size.height * 1,
@@ -178,16 +178,16 @@ class _MyTrainingPageWidgetState extends State<MyTrainingPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ColockInOutPageWidget(),
+                                          ClockInOutPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
-                                text: 'Colock In/Out',
+                                text: 'Clock In/Out',
                                 options: FFButtonOptions(
                                   width: 130,
                                   height: 75,
@@ -232,13 +232,13 @@ class _MyTrainingPageWidgetState extends State<MyTrainingPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           WorkMarketPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'Work Market',
@@ -296,6 +296,70 @@ class _MyTrainingPageWidgetState extends State<MyTrainingPageWidget> {
                         ],
                       ),
                     ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 1,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: StreamBuilder<List<TrainRecord>>(
+                      stream: queryTrainRecord(),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                color:
+                                    FlutterFlowTheme.of(context).primaryColor,
+                              ),
+                            ),
+                          );
+                        }
+                        List<TrainRecord> gridViewTrainRecordList =
+                            snapshot.data;
+                        return GridView.builder(
+                          padding: EdgeInsets.zero,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 1,
+                          ),
+                          scrollDirection: Axis.vertical,
+                          itemCount: gridViewTrainRecordList.length,
+                          itemBuilder: (context, gridViewIndex) {
+                            final gridViewTrainRecord =
+                                gridViewTrainRecordList[gridViewIndex];
+                            return Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FlutterFlowYoutubePlayer(
+                                  url: gridViewTrainRecord.path,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  height: 350,
+                                  autoPlay: false,
+                                  looping: true,
+                                  mute: false,
+                                  showControls: true,
+                                  showFullScreen: true,
+                                ),
+                                Text(
+                                  gridViewTrainRecord.trainName,
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/lat_lng.dart';
 
 class FFAppState {
@@ -20,11 +22,13 @@ class FFAppState {
 
   bool MenuShow = true;
 
-  bool ColockinAvaliable = true;
-
-  bool ColockOutEnable = true;
-
   bool confirm = true;
+
+  DocumentReference avaliabledate;
+
+  String todayDate = '';
+
+  String Date = 'Date';
 }
 
 LatLng _latLngFromString(String val) {

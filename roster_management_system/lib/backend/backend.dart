@@ -8,6 +8,7 @@ import 'schema/users_record.dart';
 import 'schema/task_record.dart';
 import 'schema/train_record.dart';
 import 'schema/task_choosed_record.dart';
+import 'schema/avaliable_weekday_record.dart';
 import 'schema/serializers.dart';
 
 export 'dart:async' show StreamSubscription;
@@ -19,6 +20,7 @@ export 'schema/users_record.dart';
 export 'schema/task_record.dart';
 export 'schema/train_record.dart';
 export 'schema/task_choosed_record.dart';
+export 'schema/avaliable_weekday_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Stream<List<UsersRecord>> queryUsersRecord({
@@ -190,6 +192,52 @@ Future<FFFirestorePage<TaskChoosedRecord>> queryTaskChoosedRecordPage({
       pageSize: pageSize,
       isStream: isStream,
     );
+
+/// Functions to query AvaliableWeekdayRecords (as a Stream and as a Future).
+Stream<List<AvaliableWeekdayRecord>> queryAvaliableWeekdayRecord({
+  DocumentReference parent,
+  Query Function(Query) queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      AvaliableWeekdayRecord.collection(parent),
+      AvaliableWeekdayRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<AvaliableWeekdayRecord>> queryAvaliableWeekdayRecordOnce({
+  DocumentReference parent,
+  Query Function(Query) queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      AvaliableWeekdayRecord.collection(parent),
+      AvaliableWeekdayRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<FFFirestorePage<AvaliableWeekdayRecord>>
+    queryAvaliableWeekdayRecordPage({
+  DocumentReference parent,
+  Query Function(Query) queryBuilder,
+  DocumentSnapshot nextPageMarker,
+  int pageSize,
+  bool isStream,
+}) =>
+        queryCollectionPage(
+          AvaliableWeekdayRecord.collection(parent),
+          AvaliableWeekdayRecord.serializer,
+          queryBuilder: queryBuilder,
+          nextPageMarker: nextPageMarker,
+          pageSize: pageSize,
+          isStream: isStream,
+        );
 
 Stream<List<T>> queryCollection<T>(Query collection, Serializer<T> serializer,
     {Query Function(Query) queryBuilder,

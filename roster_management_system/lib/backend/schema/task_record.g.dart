@@ -62,19 +62,26 @@ class _$TaskRecordSerializer implements StructuredSerializer<TaskRecord> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
     }
-    value = object.state;
-    if (value != null) {
-      result
-        ..add('state')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
     value = object.choosed;
     if (value != null) {
       result
         ..add('choosed')
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.state;
+    if (value != null) {
+      result
+        ..add('state')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.taskImage;
+    if (value != null) {
+      result
+        ..add('Task_image')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
     }
     value = object.reference;
     if (value != null) {
@@ -124,13 +131,17 @@ class _$TaskRecordSerializer implements StructuredSerializer<TaskRecord> {
           result.endDate = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
-        case 'state':
-          result.state = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
-          break;
         case 'choosed':
           result.choosed = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'state':
+          result.state = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'Task_image':
+          result.taskImage = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
@@ -159,9 +170,11 @@ class _$TaskRecord extends TaskRecord {
   @override
   final DateTime endDate;
   @override
-  final bool state;
-  @override
   final bool choosed;
+  @override
+  final String state;
+  @override
+  final String taskImage;
   @override
   final DocumentReference<Object> reference;
 
@@ -175,8 +188,9 @@ class _$TaskRecord extends TaskRecord {
       this.taskId,
       this.startDate,
       this.endDate,
-      this.state,
       this.choosed,
+      this.state,
+      this.taskImage,
       this.reference})
       : super._();
 
@@ -197,8 +211,9 @@ class _$TaskRecord extends TaskRecord {
         taskId == other.taskId &&
         startDate == other.startDate &&
         endDate == other.endDate &&
-        state == other.state &&
         choosed == other.choosed &&
+        state == other.state &&
+        taskImage == other.taskImage &&
         reference == other.reference;
   }
 
@@ -210,13 +225,17 @@ class _$TaskRecord extends TaskRecord {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, tasks.hashCode), taskName.hashCode),
-                                taskDes.hashCode),
-                            taskId.hashCode),
-                        startDate.hashCode),
-                    endDate.hashCode),
+                            $jc(
+                                $jc(
+                                    $jc($jc(0, tasks.hashCode),
+                                        taskName.hashCode),
+                                    taskDes.hashCode),
+                                taskId.hashCode),
+                            startDate.hashCode),
+                        endDate.hashCode),
+                    choosed.hashCode),
                 state.hashCode),
-            choosed.hashCode),
+            taskImage.hashCode),
         reference.hashCode));
   }
 
@@ -229,8 +248,9 @@ class _$TaskRecord extends TaskRecord {
           ..add('taskId', taskId)
           ..add('startDate', startDate)
           ..add('endDate', endDate)
-          ..add('state', state)
           ..add('choosed', choosed)
+          ..add('state', state)
+          ..add('taskImage', taskImage)
           ..add('reference', reference))
         .toString();
   }
@@ -263,13 +283,17 @@ class TaskRecordBuilder implements Builder<TaskRecord, TaskRecordBuilder> {
   DateTime get endDate => _$this._endDate;
   set endDate(DateTime endDate) => _$this._endDate = endDate;
 
-  bool _state;
-  bool get state => _$this._state;
-  set state(bool state) => _$this._state = state;
-
   bool _choosed;
   bool get choosed => _$this._choosed;
   set choosed(bool choosed) => _$this._choosed = choosed;
+
+  String _state;
+  String get state => _$this._state;
+  set state(String state) => _$this._state = state;
+
+  String _taskImage;
+  String get taskImage => _$this._taskImage;
+  set taskImage(String taskImage) => _$this._taskImage = taskImage;
 
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
@@ -289,8 +313,9 @@ class TaskRecordBuilder implements Builder<TaskRecord, TaskRecordBuilder> {
       _taskId = $v.taskId;
       _startDate = $v.startDate;
       _endDate = $v.endDate;
-      _state = $v.state;
       _choosed = $v.choosed;
+      _state = $v.state;
+      _taskImage = $v.taskImage;
       _reference = $v.reference;
       _$v = null;
     }
@@ -320,8 +345,9 @@ class TaskRecordBuilder implements Builder<TaskRecord, TaskRecordBuilder> {
               taskId: taskId,
               startDate: startDate,
               endDate: endDate,
-              state: state,
               choosed: choosed,
+              state: state,
+              taskImage: taskImage,
               reference: reference);
     } catch (_) {
       String _$failedField;

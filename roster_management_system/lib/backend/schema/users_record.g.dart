@@ -76,13 +76,12 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add(
             serializers.serialize(value, specifiedType: const FullType(bool)));
     }
-    value = object.avaliableDate;
+    value = object.taskImage;
     if (value != null) {
       result
-        ..add('avaliable_date')
+        ..add('task_image')
         ..add(serializers.serialize(value,
-            specifiedType:
-                const FullType(BuiltList, const [const FullType(bool)])));
+            specifiedType: const FullType(String)));
     }
     value = object.reference;
     if (value != null) {
@@ -140,11 +139,9 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           result.admin = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
-        case 'avaliable_date':
-          result.avaliableDate.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(bool)]))
-              as BuiltList<Object>);
+        case 'task_image':
+          result.taskImage = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
@@ -177,7 +174,7 @@ class _$UsersRecord extends UsersRecord {
   @override
   final bool admin;
   @override
-  final BuiltList<bool> avaliableDate;
+  final String taskImage;
   @override
   final DocumentReference<Object> reference;
 
@@ -193,7 +190,7 @@ class _$UsersRecord extends UsersRecord {
       this.photoUrl,
       this.createdTime,
       this.admin,
-      this.avaliableDate,
+      this.taskImage,
       this.reference})
       : super._();
 
@@ -216,7 +213,7 @@ class _$UsersRecord extends UsersRecord {
         photoUrl == other.photoUrl &&
         createdTime == other.createdTime &&
         admin == other.admin &&
-        avaliableDate == other.avaliableDate &&
+        taskImage == other.taskImage &&
         reference == other.reference;
   }
 
@@ -236,7 +233,7 @@ class _$UsersRecord extends UsersRecord {
                         photoUrl.hashCode),
                     createdTime.hashCode),
                 admin.hashCode),
-            avaliableDate.hashCode),
+            taskImage.hashCode),
         reference.hashCode));
   }
 
@@ -251,7 +248,7 @@ class _$UsersRecord extends UsersRecord {
           ..add('photoUrl', photoUrl)
           ..add('createdTime', createdTime)
           ..add('admin', admin)
-          ..add('avaliableDate', avaliableDate)
+          ..add('taskImage', taskImage)
           ..add('reference', reference))
         .toString();
   }
@@ -292,11 +289,9 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   bool get admin => _$this._admin;
   set admin(bool admin) => _$this._admin = admin;
 
-  ListBuilder<bool> _avaliableDate;
-  ListBuilder<bool> get avaliableDate =>
-      _$this._avaliableDate ??= new ListBuilder<bool>();
-  set avaliableDate(ListBuilder<bool> avaliableDate) =>
-      _$this._avaliableDate = avaliableDate;
+  String _taskImage;
+  String get taskImage => _$this._taskImage;
+  set taskImage(String taskImage) => _$this._taskImage = taskImage;
 
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
@@ -318,7 +313,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _photoUrl = $v.photoUrl;
       _createdTime = $v.createdTime;
       _admin = $v.admin;
-      _avaliableDate = $v.avaliableDate?.toBuilder();
+      _taskImage = $v.taskImage;
       _reference = $v.reference;
       _$v = null;
     }
@@ -350,16 +345,13 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
               photoUrl: photoUrl,
               createdTime: createdTime,
               admin: admin,
-              avaliableDate: _avaliableDate?.build(),
+              taskImage: taskImage,
               reference: reference);
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'user';
         _user?.build();
-
-        _$failedField = 'avaliableDate';
-        _avaliableDate?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'UsersRecord', _$failedField, e.toString());

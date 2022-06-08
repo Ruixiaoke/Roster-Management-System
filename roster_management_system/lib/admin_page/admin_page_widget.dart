@@ -128,12 +128,12 @@ class _AdminPageWidgetState extends State<AdminPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ManageTrainWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'Manage My Training',
@@ -158,12 +158,13 @@ class _AdminPageWidgetState extends State<AdminPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           ManageWorkMarketWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'Manage Work Market',

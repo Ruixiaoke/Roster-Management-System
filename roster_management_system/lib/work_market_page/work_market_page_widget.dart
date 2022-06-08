@@ -1,17 +1,24 @@
 import '../auth/auth_util.dart';
-import '../colock_in_out_page/colock_in_out_page_widget.dart';
+import '../backend/backend.dart';
+import '../clock_in_out_page/clock_in_out_page_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../home_page/home_page_widget.dart';
 import '../my_roster_page/my_roster_page_widget.dart';
 import '../my_training_page/my_training_page_widget.dart';
+import '../task_detail_page/task_detail_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WorkMarketPageWidget extends StatefulWidget {
-  const WorkMarketPageWidget({Key key}) : super(key: key);
+  const WorkMarketPageWidget({
+    Key key,
+    this.taskID,
+  }) : super(key: key);
+
+  final String taskID;
 
   @override
   _WorkMarketPageWidgetState createState() => _WorkMarketPageWidgetState();
@@ -26,12 +33,6 @@ class _WorkMarketPageWidgetState extends State<WorkMarketPageWidget> {
     // On page load action.
     SchedulerBinding.instance?.addPostFrameCallback((_) async {
       setState(() => FFAppState().MenuShow = false);
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyRosterPageWidget(),
-        ),
-      );
     });
   }
 
@@ -115,7 +116,11 @@ class _WorkMarketPageWidgetState extends State<WorkMarketPageWidget> {
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  if ((FFAppState().MenuShow) == true)
+                  if (((FFAppState().MenuShow) == true) ||
+                      responsiveVisibility(
+                        context: context,
+                        desktop: false,
+                      ))
                     Container(
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: MediaQuery.of(context).size.height * 1,
@@ -178,16 +183,15 @@ class _WorkMarketPageWidgetState extends State<WorkMarketPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ColockInOutPageWidget(),
+                                          ClockInOutPageWidget(),
                                     ),
                                   );
                                 },
-                                text: 'Colock In/Out',
+                                text: 'Clock In/Out',
                                 options: FFButtonOptions(
                                   width: 130,
                                   height: 75,
@@ -209,13 +213,13 @@ class _WorkMarketPageWidgetState extends State<WorkMarketPageWidget> {
                               ),
                               FFButtonWidget(
                                 onPressed: () async {
-                                  setState(() => FFAppState().MenuShow = false);
-                                  await Navigator.push(
+                                  await Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           MyTrainingPageWidget(),
                                     ),
+                                    (r) => false,
                                   );
                                 },
                                 text: 'My Training',
@@ -296,6 +300,114 @@ class _WorkMarketPageWidgetState extends State<WorkMarketPageWidget> {
                         ],
                       ),
                     ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 1,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFEEEEEE),
+                    ),
+                    child: StreamBuilder<List<TaskRecord>>(
+                      stream: queryTaskRecord(
+                        queryBuilder: (taskRecord) =>
+                            taskRecord.where('choosed', isEqualTo: false),
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                color:
+                                    FlutterFlowTheme.of(context).primaryColor,
+                              ),
+                            ),
+                          );
+                        }
+                        List<TaskRecord> gridViewTaskRecordList = snapshot.data;
+                        return GridView.builder(
+                          padding: EdgeInsets.zero,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 1,
+                          ),
+                          scrollDirection: Axis.vertical,
+                          itemCount: gridViewTaskRecordList.length,
+                          itemBuilder: (context, gridViewIndex) {
+                            final gridViewTaskRecord =
+                                gridViewTaskRecordList[gridViewIndex];
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFEEEEEE),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.network(
+                                    gridViewTaskRecord.taskImage,
+                                    width: 250,
+                                    height: 250,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Text(
+                                    gridViewTaskRecord.taskName,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 35,
+                                        ),
+                                  ),
+                                  FFButtonWidget(
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          type: PageTransitionType.fade,
+                                          duration: Duration(milliseconds: 0),
+                                          reverseDuration:
+                                              Duration(milliseconds: 0),
+                                          child: TaskDetailPageWidget(
+                                            taskID: gridViewTaskRecord.taskId,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    text: 'Detail',
+                                    options: FFButtonOptions(
+                                      width: 130,
+                                      height: 50,
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryColor,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .subtitle2
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                            fontSize: 40,
+                                          ),
+                                      borderSide: BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1,
+                                      ),
+                                      borderRadius: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],

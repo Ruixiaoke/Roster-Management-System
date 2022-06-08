@@ -38,8 +38,8 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   bool get admin;
 
   @nullable
-  @BuiltValueField(wireName: 'avaliable_date')
-  BuiltList<bool> get avaliableDate;
+  @BuiltValueField(wireName: 'task_image')
+  String get taskImage;
 
   @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
@@ -53,7 +53,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
     ..phoneNumber = ''
     ..photoUrl = ''
     ..admin = false
-    ..avaliableDate = ListBuilder();
+    ..taskImage = '';
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('Users');
@@ -84,6 +84,7 @@ Map<String, dynamic> createUsersRecordData({
   String photoUrl,
   DateTime createdTime,
   bool admin,
+  String taskImage,
 }) =>
     serializers.toFirestore(
         UsersRecord.serializer,
@@ -96,4 +97,4 @@ Map<String, dynamic> createUsersRecordData({
           ..photoUrl = photoUrl
           ..createdTime = createdTime
           ..admin = admin
-          ..avaliableDate = null));
+          ..taskImage = taskImage));

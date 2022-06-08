@@ -33,10 +33,14 @@ abstract class TaskRecord implements Built<TaskRecord, TaskRecordBuilder> {
   DateTime get endDate;
 
   @nullable
-  bool get state;
+  bool get choosed;
 
   @nullable
-  bool get choosed;
+  String get state;
+
+  @nullable
+  @BuiltValueField(wireName: 'Task_image')
+  String get taskImage;
 
   @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
@@ -47,8 +51,9 @@ abstract class TaskRecord implements Built<TaskRecord, TaskRecordBuilder> {
     ..taskName = ''
     ..taskDes = ''
     ..taskId = ''
-    ..state = false
-    ..choosed = false;
+    ..choosed = false
+    ..state = ''
+    ..taskImage = '';
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('Task');
@@ -76,8 +81,9 @@ Map<String, dynamic> createTaskRecordData({
   String taskId,
   DateTime startDate,
   DateTime endDate,
-  bool state,
   bool choosed,
+  String state,
+  String taskImage,
 }) =>
     serializers.toFirestore(
         TaskRecord.serializer,
@@ -88,5 +94,6 @@ Map<String, dynamic> createTaskRecordData({
           ..taskId = taskId
           ..startDate = startDate
           ..endDate = endDate
+          ..choosed = choosed
           ..state = state
-          ..choosed = choosed));
+          ..taskImage = taskImage));
