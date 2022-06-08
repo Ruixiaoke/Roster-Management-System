@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "515997796368",
+    "firebase_url": "https://roster-management-system-default-rtdb.firebaseio.com",
+    "project_id": "roster-management-system",
+    "storage_bucket": "roster-management-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515997796368:android:c0ea8b471640e242032295",
+        "android_client_info": {
+          "package_name": "com.flutterflow.rostermanagementsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515997796368-urkdqnetqvkc5ft36iluds7h4dmqd4av.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flutterflow.rostermanagementsystem",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "515997796368-n1b0tljds2rcr0hr3m7kjbiu533b3olg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYYDPzTCRd70G2FXjjPX_1Hf_cucMubYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515997796368-n1b0tljds2rcr0hr3m7kjbiu533b3olg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "515997796368-ptqoikvc2nk5e8vhg8n4ugrj9gihhf27.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.rostermanagementsystem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
